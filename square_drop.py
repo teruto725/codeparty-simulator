@@ -163,3 +163,31 @@ class Helper():
     def __init__(self,tiles,players):
         self.tiles = tiles
         self.players = players
+
+    def labeling(self,level):
+        #level層目をラベリングしてラベリング結果の２次元配列を返す
+        x_max = self.tiles.x_max+2
+        y_max = self.tiles.y_max+2
+
+        labeled = [[(i*x_max+j if self.tiles.tiles[i][j][level].is_alive else -1)for j in range(y_max)] for i in range(x_max)]
+        changed = True
+        while changed:
+            changed= False
+            for i in range(x_max):
+                for j in range(y_max):
+                    candidate = []
+                    if(labeled[i][j] == -1):
+                        continue
+                    if(i>=1 and self.tiles.tiles[i-1][j][level].is_alive):
+                        candidate+=[labeled[i-1][j]]
+                    if(j>=1 and self.tiles.tiles[i][j-1][level].is_alive):
+                        candidate+=[labeled[i][j-1]]
+                    if(i<=self.tiles.y_max-2 and self.tiles.tiles[i+1][j][level].is_alive):
+                        candidate+=[labeled[i+1][j]]
+                    if(j<=self.tiles.x_max-2 and self.tiles.tiles[i][j][level].is_alive):
+                        candidate+=[labeled[i][j+1]]
+                    mini = min(candidate)
+                    if(mini < labeled[i][j]):
+                        changed = True
+                        labeled[i][j] = mini
+        return labeled
