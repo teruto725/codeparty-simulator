@@ -198,3 +198,36 @@ class Helper():
                         changed = True
                         labeled[i][j] = mini
         return labeled
+
+    def get_tiles(self):
+        return self.tiles
+    
+    
+    def get_players(self):
+        return self.players
+    
+    #敵の座標配列
+    def get_enemy_players(self,name):
+        stack = []
+        for p in self.players:
+            if p.name != name:
+                stack.append(p)
+        return stack
+
+    #自分の座標
+    def get_your_player(self,name):
+        for p in self.players:
+            if p.name == name:
+                return p
+    
+    #距離の差分* 敵３人
+    def get_distance_points_from_you(self,name):
+        stack = []
+        you = self.get_your_player(name)
+        yp = you.get_point()
+        for p in self.get_enemy_players():
+            pp = p.get_point()
+            stack.append([yp[0]-pp[0],yp[1]-pp[1],yp[2]-pp[2]])
+        return stack
+    
+    
