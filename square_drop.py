@@ -53,7 +53,7 @@ class Game():
     def get_result_log(self):
         for player in self.players:
             if player.is_alive:
-                return player
+                return player.to_log()
         
 
 class Tiles():
@@ -114,7 +114,9 @@ class Tiles():
                 li_y.append(li_z)
             tiles_arr.append(li_y)
         return tiles_arr
-
+    
+    def get_tile(self,point):
+        return self.tiles[point[0]][point[1]][point[2]]
 
 class Tile():
     dead_count = 1 # タイルが消えるまでの時間
@@ -136,9 +138,10 @@ class Player():
         self.point = start_point
         self.is_alive = True # 生きているか
         self.is_falling = False # 落ちているか
-
+        self.before_action = 0
     #移動する
     def move(self,action):
+        self.before_action = action
         if self.is_alive:
             if self.is_falling:#落ちている状況なら落ちる
                 self.point = [self.point[0], self.point[1], self.point[2]+1]
@@ -215,13 +218,19 @@ class Helper():
         return stack
 
     #自分の座標
-    def get_your_player(self,name):
+    def get_my_player(self,name):
         for p in self.players:
             if p.name == name:
                 return p
     
+    def get_my_point(self,name):
+        for p in self.players:
+            if p.name == name:
+                return p.point
+
+
     #距離の差分* 敵３人
-    def get_distance_points_from_you(self,name):
+    def get_distance_points_from_me(self,name):
         stack = []
         you = self.get_your_player(name)
         yp = you.get_point()
@@ -230,4 +239,49 @@ class Helper():
             stack.append([yp[0]-pp[0],yp[1]-pp[1],yp[2]-pp[2]])
         return stack
     
+    def get_up_point(self,point):
+        return [point[0],point[1]-1,point[2]]
+    def get_down_point(self,point):
+        return [point[0],point[1]-1,point[2]]
+    def get_left_point(self,point):
+        return [point[0],point[1]-1,point[2]]
+    def get_right_point(self,point):
+        return [point[0],point[1]-1,point[2]]
+
+    def get_up_tile(self,point):
+        return self.tiles.get_tile(self.get_up_point(point))
+    def get_down_tile(self,point):
+        return self.tiles.get_tile(self.get_down_point(point))
+    def get_left_tile(self,point):
+        return self.tiles.get_tile(self.get_left_point(point))
+    def get_right_tile(self,point):
+        return self.tiles.get_tile(self.get_right_point(point))
     
+    #dist_pointに最短距離で移動するときに向かうべき方向
+    def get_toward_distination(self,mypoint, dist_point):
+        x = mypoint[0]-dist_point[0]
+        y = mypoint[1]-dist_point[1]
+        z = mypoint[2]-dist_point[2]
+        if x  == 0 and y == 0 and z == 0:
+            return 5
+        if abs(x) > abs(y) and abs(x) > abs(z):
+            if x >0:
+                return 2
+            if x < 0:
+                return 3
+        if abs(y) > abs(x) and abs(y) > abs(z):
+            if y >0:
+                return 0
+            if y < 0:
+                return 1
+        if abs(z) > abs(x) and abs(z) > abs(y):
+            return 4
+    
+    #特定プレイヤーの前回の行動を取る
+    def get_before_action(self,name):
+        p = self.get_my_player(name)
+        return p.before_action
+    
+    #周囲のtile一覧を取得 上下左右の順
+    def get_around_tiles(self,name):
+        return [self.get_up_tile(),self.get_down_tile(),self.get_left_tile(),self.get_right_tile()]

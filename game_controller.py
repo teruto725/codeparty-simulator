@@ -29,7 +29,7 @@ class GameController():
             
 
             if game.is_end():
-                self.log.append(game.get_result_log())
+                #self.log.append(game.get_result_log())
                 return self.log
         
     
