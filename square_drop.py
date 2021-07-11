@@ -4,13 +4,19 @@ class Game():
     start_point = [[2,2,0],[2,9,0],[9,2,0],[9,9,0]]
     def __init__(self,names):
         self.p_num = 4
-        self.x = 10
-        self.y = 10
-        self.z = 5
+        self.max_x = 10
+        self.max_y = 10
+        self.max_z = 5
         self.players = [Player(name,Game.start_point[i]) for i,name in enumerate(names)]
-        self.tiles = Tiles(self.x,self.y,self.z)
+        self.tiles = Tiles(self.max_x,self.max_y,self.max_z)
         self.turn_num = 0
         self.helper = Helper(self.tiles,self.players)
+
+        #初期位置のちぇっく
+        for player in self.players:
+            self.tiles.check_player_move(player)
+
+
 
     def get_helper(self):
         return self.helper
@@ -130,6 +136,7 @@ class Player():
         self.point = start_point
         self.is_alive = True # 生きているか
         self.is_falling = False # 落ちているか
+
     #移動する
     def move(self,action):
         if self.is_alive:
