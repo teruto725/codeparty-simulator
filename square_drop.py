@@ -156,6 +156,8 @@ class Player():
             elif action == 4:
                 self.point =  [self.point[0], self.point[1], self.point[2]]
             else:
+                print(action)
+                print(self.name)
                 print("Action Error")
     
     def to_log(self):
@@ -242,40 +244,41 @@ class Helper():
     def get_up_point(self,point):
         return [point[0],point[1]-1,point[2]]
     def get_down_point(self,point):
-        return [point[0],point[1]-1,point[2]]
+        return [point[0],point[1]+1,point[2]]
     def get_left_point(self,point):
-        return [point[0],point[1]-1,point[2]]
+        return [point[0]-1,point[1],point[2]]
     def get_right_point(self,point):
-        return [point[0],point[1]-1,point[2]]
+        return [point[0]+1,point[1],point[2]]
 
-    def get_up_tile(self,point):
+    def get_up_tile(self,name):
+        point = self.get_my_point(name)
         return self.tiles.get_tile(self.get_up_point(point))
-    def get_down_tile(self,point):
+    def get_down_tile(self,name):
+        point = self.get_my_point(name)
         return self.tiles.get_tile(self.get_down_point(point))
-    def get_left_tile(self,point):
+    def get_left_tile(self,name):
+        point = self.get_my_point(name)
         return self.tiles.get_tile(self.get_left_point(point))
-    def get_right_tile(self,point):
+    def get_right_tile(self,name):
+        point = self.get_my_point(name)
         return self.tiles.get_tile(self.get_right_point(point))
     
     #dist_pointに最短距離で移動するときに向かうべき方向
     def get_toward_distination(self,mypoint, dist_point):
         x = mypoint[0]-dist_point[0]
         y = mypoint[1]-dist_point[1]
-        z = mypoint[2]-dist_point[2]
-        if x  == 0 and y == 0 and z == 0:
+        if x  == 0 and y == 0:
             return 5
-        if abs(x) > abs(y) and abs(x) > abs(z):
+        if abs(x) >= abs(y):
             if x >0:
                 return 2
             if x < 0:
                 return 3
-        if abs(y) > abs(x) and abs(y) > abs(z):
+        if abs(y) > abs(x):
             if y >0:
                 return 0
             if y < 0:
                 return 1
-        if abs(z) > abs(x) and abs(z) > abs(y):
-            return 4
     
     #特定プレイヤーの前回の行動を取る
     def get_before_action(self,name):
@@ -284,4 +287,4 @@ class Helper():
     
     #周囲のtile一覧を取得 上下左右の順
     def get_around_tiles(self,name):
-        return [self.get_up_tile(),self.get_down_tile(),self.get_left_tile(),self.get_right_tile()]
+        return [self.get_up_tile(name),self.get_down_tile(name),self.get_left_tile(name),self.get_right_tile(name)]
