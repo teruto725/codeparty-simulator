@@ -112,11 +112,16 @@ class Tiles():
                 for z in range(self.z_max+1):
                     li_z.append(self.tiles[x][y][z].is_alive)
                 li_y.append(li_z)
-            tiles_arr.append(li_y)
+            tiles_arr.append(li_y) 
         return tiles_arr
     
     def get_tile(self,point):
-        return self.tiles[point[0]][point[1]][point[2]]
+        try :
+            return self.tiles[point[0]][point[1]][point[2]]
+        except :
+            dummy =  Tile()
+            dummy.is_alive = False
+            return dummy
 
 class Tile():
     dead_count = 1 # タイルが消えるまでの時間
