@@ -3,7 +3,7 @@ from importlib import import_module
 import json
 from game_controller import GameController
 
-player_paths= ["players.player1","players.player2","players.player3","players.player5"]
+player_paths= ["players.yourcode","sample2","players.sample3","players.sample4"]
 player_num = 4
 
 

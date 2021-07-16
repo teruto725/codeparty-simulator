@@ -10,7 +10,7 @@ class Game():
         self.players = [Player(name,Game.start_point[i]) for i,name in enumerate(names)]
         self.tiles = Tiles(self.max_x,self.max_y,self.max_z)
         self.turn_num = 0
-        self.helper = Helper(self.tiles,self.players)
+        self.helper = Helper(self.tiles,self.players,self)
 
         #初期位置のちぇっく
         for player in self.players:
@@ -136,6 +136,9 @@ class Tile():
         if self.count == 0:
             self.is_alive = False
     
+    #利用可能ならtrue 利用不可能ならfalse
+    def get_is_alive(self):
+        return self.is_alive
 
 class Player():
     def __init__(self,name,start_point):
@@ -177,10 +180,10 @@ class Player():
         return self.point
 
 class Helper():
-    def __init__(self,tiles,players):
+    def __init__(self,tiles,players,game):
         self.tiles = tiles
         self.players = players
-
+        self.game = game
     def labeling(self,level):
         #level層目をラベリングしてラベリング結果の２次元配列を返す
         x_max = self.tiles.x_max+2
@@ -246,6 +249,13 @@ class Helper():
             stack.append([yp[0]-pp[0],yp[1]-pp[1],yp[2]-pp[2]])
         return stack
     
+    def get_distance_points_from_point(self,point):
+        stack = []
+        for p in self.get_enemy_players():
+            pp = p.get_point()
+            stack.append([point[0]-pp[0],point[1]-pp[1],point[2]-pp[2]])
+        return stack
+
     def get_up_point(self,point):
         return [point[0],point[1]-1,point[2]]
     def get_down_point(self,point):
@@ -268,7 +278,11 @@ class Helper():
         point = self.get_my_point(name)
         return self.tiles.get_tile(self.get_right_point(point))
     
-    #dist_pointに最短距離で移動するときに向かうべき方向
+    #ターン数を取得する
+    def get_turn_num(self):
+        return self.game.turn_num
+
+    #dist_pointに最短距離で移動するときに向かうべき方向を返す
     def get_toward_distination(self,mypoint, dist_point):
         x = mypoint[0]-dist_point[0]
         y = mypoint[1]-dist_point[1]

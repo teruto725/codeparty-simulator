@@ -4,7 +4,7 @@ from square_drop import Helper,Player,Tile,Tiles
 
 import  random as rd
 
-name = "BOTTOM BLEAKER"
+name = "Sample3"
 
 act_li = [0,3,1,2]
 idx = 0

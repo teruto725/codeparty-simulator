@@ -4,7 +4,7 @@ from square_drop import Helper,Player,Tile,Tiles
 
 import  random as rd
 
-name = "AVOID HOLE RANDOM MAN2" #名前を書く
+name = "Sample4" #名前を書く
 def action(helper):
     stack = []
     if helper.get_up_tile(name).is_alive :
@@ -19,3 +19,4 @@ def action(helper):
         return 4
     else:
         return stack[rd.randrange(len(stack))]
+
