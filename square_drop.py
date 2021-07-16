@@ -283,9 +283,9 @@ class Helper():
         return self.game.turn_num
 
     #dist_pointに最短距離で移動するときに向かうべき方向を返す
-    def get_toward_distination(self,mypoint, dist_point):
-        x = mypoint[0]-dist_point[0]
-        y = mypoint[1]-dist_point[1]
+    def get_toward_distination(self,frompoint, dist_point):
+        x = frompoint[0]-dist_point[0]
+        y = frompoint[1]-dist_point[1]
         if x  == 0 and y == 0:
             return 5
         if abs(x) >= abs(y):
