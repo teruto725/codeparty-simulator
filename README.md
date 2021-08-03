@@ -27,7 +27,7 @@
     - 特定のプレイヤーの前回の行動を取る
 - get_around_tiles(name):
     - 特定のプレイヤーのタイル一覧を配列で取得する。上下左右の順
-
+- get_player_enemysnames(name)
 ## Tileクラス
 - tile.get_is_alive():
     - タイルが利用可能かどうか true or false

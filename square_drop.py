@@ -14,7 +14,7 @@ class Game():
 
         #初期位置のちぇっく
         for player in self.players:
-            self.tiles.check_player_move(player)
+            self.tiles.check_player_move(player,turn_num=0)
 
 
 
@@ -25,7 +25,7 @@ class Game():
     def do_action(self,p_num,action):
         player = self.players[p_num]
         player.move(action)#移動する
-        self.tiles.check_player_move(player)# 移動したときどうなるか
+        self.tiles.check_player_move(player,self.turn_num)# 移動したときどうなるか
     
     #tileを更新する
     def next_turn(self):
@@ -51,10 +51,25 @@ class Game():
 
     #最終結果のlog
     def get_result_log(self):
-        for player in self.players:
-            if player.is_alive:
-                return player.to_log()
-        
+        ranking = []
+        order_dead_turn_num = list()
+        for p in self.players:
+            print(p.dead_turn_num)
+            if p.is_alive == True:
+                ranking.append({"player_name":p.name,"ranking":1})
+                order_dead_turn_num.append(99999)#ダミー
+                continue
+            order_dead_turn_num.append(p.dead_turn_num)
+        order_dead_turn_num =list(reversed(list(sorted(order_dead_turn_num))))
+        print(order_dead_turn_num)
+        for p in self.players:
+            print(p.name)
+            print(p.dead_turn_num)
+            if p.is_alive == False:
+                rank = order_dead_turn_num.index(p.dead_turn_num)
+                ranking.append({"plaer_name":p.name,"ranking":rank+1})
+        print(ranking)
+        return ranking
 
 class Tiles():
     def __init__(self,x_max,y_max,z_max):
@@ -89,11 +104,12 @@ class Tiles():
                 self.pressed_tiles.pop(i)
 
     #行動に応じてplayerを行動させる
-    def check_player_move(self,player):
+    def check_player_move(self,player,turn_num):
         point = player.get_point()
         tile = self.tiles[point[0]][point[1]][point[2]]
-        if point[2] == self.z_max: #最下層なら問答無用で殺す
-            player.is_alive = False
+        if point[2] == self.z_max: #最下層で生きているなら問答無用で殺す
+            if player.is_alive == True:
+                player.kill(turn_num)
         else:
             if tile.is_alive: # タイルがあればfalling = Falseなければfalling
                 player.is_falling = False
@@ -147,6 +163,7 @@ class Player():
         self.is_alive = True # 生きているか
         self.is_falling = False # 落ちているか
         self.before_action = 0
+        self.dead_turn_num = 0
     #移動する
     def move(self,action):
         self.before_action = action
@@ -178,6 +195,12 @@ class Player():
 
     def get_point(self):
         return self.point
+
+    def kill(self,turn_num):
+        self.is_alive = False
+        self.dead_turn_num = turn_num
+
+
 
 class Helper():
     def __init__(self,tiles,players,game):
@@ -278,6 +301,14 @@ class Helper():
         point = self.get_my_point(name)
         return self.tiles.get_tile(self.get_right_point(point))
     
+    def get_players_around_n_tiles(self,name,dis):
+        stack = []
+        me = self.get_my_player(name)
+        for p in self.get_enemy_players(name):
+            if p.point[2] == me.point[2] - (abs(p.point[0] - me.point[0]) > dis or abs(p.point[1]-me.point[1]) > dis ) :
+                stack.append(p)
+        return stack
+
     #ターン数を取得する
     def get_turn_num(self):
         return self.game.turn_num
@@ -307,3 +338,5 @@ class Helper():
     #周囲のtile一覧を取得 上下左右の順
     def get_around_tiles(self,name):
         return [self.get_up_tile(name),self.get_down_tile(name),self.get_left_tile(name),self.get_right_tile(name)]
+
+
