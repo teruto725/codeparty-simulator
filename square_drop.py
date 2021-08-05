@@ -56,7 +56,7 @@ class Game():
         for p in self.players:
             print(p.dead_turn_num)
             if p.is_alive == True:
-                ranking.append({"player_name":p.name,"ranking":1})
+                ranking.append({"name":p.name,"order":1})
                 order_dead_turn_num.append(99999)#ダミー
                 continue
             order_dead_turn_num.append(p.dead_turn_num)
@@ -67,7 +67,7 @@ class Game():
             print(p.dead_turn_num)
             if p.is_alive == False:
                 rank = order_dead_turn_num.index(p.dead_turn_num)
-                ranking.append({"plaer_name":p.name,"ranking":rank+1})
+                ranking.append({"name":p.name,"order":rank+1})
         print(ranking)
         return ranking
 

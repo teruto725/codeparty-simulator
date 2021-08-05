@@ -5,7 +5,7 @@ from square_drop import Game
 class GameController():
     def __init__(self,players):
         self.players = players
-        self.log = []
+        self.gameinfo = []
 
     def start(self):
         game = Game([player.name for player in self.players])
@@ -21,16 +21,16 @@ class GameController():
                 new_log["players"][i]["action"] = action
 
 
-            self.log.append(new_log)# logにgameの情報とactionを書き込む
+            self.gameinfo.append(new_log)# logにgameの情報とactionを書き込む
 
-            pprint(new_log)
+            pprint(new_log["turn_num"])
             for i,action in enumerate(actions):
                 game.do_action(i,action)#ユーザが移動する。前回踏まれているところは消えているので落ちる
-            
+                
 
             if game.is_end():
-                self.log.append(game.get_result_log())
-                return self.log
+                result = game.get_result_log()
+                return {"gameinfo":self.gameinfo,"ranking":result}
         
     
 

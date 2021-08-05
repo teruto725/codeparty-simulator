@@ -13,4 +13,4 @@ if __name__ == '__main__':
     g_con = GameController(players)
     log = g_con.start()
     with open('./log/input.json', 'w') as f:
-        json.dump({"game_info":log}, f, indent=4)
+        json.dump(log, f, indent=4)
