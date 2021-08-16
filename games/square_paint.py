@@ -1,7 +1,7 @@
 
     
 class Game():
-    start_point = [[4,4],[4,5],[5,5],[5,4]]
+    start_point = [[2,2],[2,9],[9,2],[9,9]]
     def __init__(self,names):
         self.p_num = 4
         self.max_x = 10
@@ -80,6 +80,7 @@ class Tiles():
             self.tiles.append([ Tile(p_num) for _ in range(y_max+2) ])
         self._create_dead_area()#周りのマスを空にしておく
         self.to_log()
+        
     #周りに空のエリアを作る
     def _create_dead_area(self): 
         for x in range(self.x_max+2):
@@ -97,8 +98,8 @@ class Tiles():
     # 配列にする
     def to_log(self):
         tiles_arr = []
-        for x in range(1,self.x_max+1):
-            for y in range(1,self.y_max+1):
+        for y in range(1,self.y_max+1):
+            for x in range(1,self.x_max+1):
                 tiles_arr.append(self.tiles[x][y].status)
         return tiles_arr
     
