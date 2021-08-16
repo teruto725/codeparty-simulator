@@ -1,7 +1,7 @@
 # coding: UTF-8
 from importlib import import_module
 import json
-from game_controller import GameController
+from game_controller2 import GameController
 
 player_paths= ["players.sample2","players.sample2","players.sample2","players.sample2"]
 player_num = 4

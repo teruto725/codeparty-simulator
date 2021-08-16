@@ -189,8 +189,10 @@ class Player():
             "name": self.name,
             "point": self.point,
             "is_stun": self.is_stun,
+            "count_stun": self.count_stun,
             "is_hit_wall": self.is_hit_wall,
-            "socre": self.score,
+            "score": self.score,
+
         }
         
     def get_point(self):
