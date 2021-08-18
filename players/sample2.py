@@ -1,6 +1,6 @@
 import sys
 sys.path.append('../')
-from games.square_paint import Helper,Player,Tile,Tiles
+from games.square_paint import Helper
 
 import  random as rd
 

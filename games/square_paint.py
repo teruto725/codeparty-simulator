@@ -9,14 +9,13 @@ class Game():
         self.players = [Player(i,name,Game.start_point[i]) for i,name in enumerate(names)]
         self.tiles = Tiles(self.max_x,self.max_y,self.p_num)
         self.turn_num = 0
-        self.helper = Helper(self.tiles,self.players,self)
 
         #初期位置のちぇっく
         for i,player in enumerate(self.players):
             self.tiles.change_color(self.players) #タイルの色を変える
 
     def get_helper(self):
-        return self.helper
+        return Helper(self.tiles,self.players,self)
 
     #actionを受け取る
     def do_action(self,p_idx,action):
@@ -113,6 +112,17 @@ class Tiles():
                 if self.tiles[x][y].status != 0:
                     counter[self.tiles[x][y].status-1] += 1
         return counter
+    
+    def get_status(self):
+        tiles = []
+        temp = list()
+        for i, status in enumerate(self.to_log()):
+            temp.append(status)
+            if i % self.x_max == self.x_max-1:
+                tiles.append(temp)
+                temp = list()
+        return tiles
+
 class Tile():
     dead_count = 1 # タイルが消えるまでの時間
     def __init__(self,p_num):
@@ -203,9 +213,19 @@ class Player():
 
 class Helper():
     def __init__(self,tiles,players,game):
-        self.tiles = tiles
-        self.players = players
+        self.tiles_ori = tiles
+        self.tiles = tiles.get_status()
+        self.player_list = players
         self.game = game
+        self.turn = self.get_turn_num()
+        self.players = [ player.point for player in self.player_list]
+        self.index = None
+        self.scores = tiles.get_scores()
+
+    def set_player_index(self,i):
+        self.index = i
+
+
     def labeling(self,level):
         #level層目をラベリングしてラベリング結果の２次元配列を返す
         x_max = self.tiles.x_max+2
@@ -238,27 +258,6 @@ class Helper():
         return self.tiles
     
     
-    def get_players(self):
-        return self.players
-    
-    #敵の座標配列
-    def get_enemy_players(self,name):
-        stack = []
-        for p in self.players:
-            if p.name != name:
-                stack.append(p)
-        return stack
-
-    #自分の座標
-    def get_my_player(self,name):
-        for p in self.players:
-            if p.name == name:
-                return p
-    
-    def get_my_point(self,name):
-        for p in self.players:
-            if p.name == name:
-                return p.point
 
 
     #距離の差分* 敵３人
@@ -312,22 +311,6 @@ class Helper():
     def get_turn_num(self):
         return self.game.turn_num
 
-    #dist_pointに最短距離で移動するときに向かうべき方向を返す
-    def get_toward_distination(self,frompoint, dist_point):
-        x = frompoint[0]-dist_point[0]
-        y = frompoint[1]-dist_point[1]
-        if x  == 0 and y == 0:
-            return 5
-        if abs(x) >= abs(y):
-            if x >0:
-                return 2
-            if x < 0:
-                return 3
-        if abs(y) > abs(x):
-            if y >0:
-                return 0
-            if y < 0:
-                return 1
     
     #特定プレイヤーの前回の行動を取る
     def get_before_action(self,name):

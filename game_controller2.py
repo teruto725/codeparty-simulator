@@ -28,6 +28,7 @@ class GameController():
                 return {"gameinfo":self.gameinfo,"ranking":result}
 
             for i,player in enumerate(self.players):# playerが行動を決定する
+                helper.set_player_index(i)
                 actions.append(player.action(helper))
             
             new_log = game.get_log() #gameのログを追加する
